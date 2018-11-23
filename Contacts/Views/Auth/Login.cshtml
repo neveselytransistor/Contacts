@@ -1,24 +1,29 @@
 ﻿@model Contacts.ViewModels.LoginModel
 
-<h2>Вход на сайт</h2>
+<h2>Sign in</h2>
 
-<a asp-action="Register" asp-controller="Auth">Регистрация</a>
+<a asp-action="Register" asp-controller="Auth">Registration</a>
 
-<form asp-action="Login" asp-controller="Auth" asp-anti-forgery="true">
+<form asp-action="Login" asp-controller="Auth">
+    <br />
     <div class="validation" asp-validation-summary="ModelOnly" />
-    <div>
-        <div class="form-group">
-            <label asp-for="Email">Введите Email</label>
-            <input type="text" asp-for="Email" />
+    <div class="row">
+        <div class="col-md-4">
+            <label asp-for="Email">Email</label>
+            <input type="text" asp-for="Email" class="form-control" />
             <span asp-validation-for="Email" />
         </div>
-        <div class="form-group">
-            <label asp-for="Password">Введите пароль</label>
-            <input asp-for="Password" />
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+            <label asp-for="Password">Password</label>
+            <input asp-for="Password" class="form-control" />
             <span asp-validation-for="Password" />
         </div>
-        <div class="form-group">
-            <button type="submit" class="btn">Войти</button>
-        </div>
+    </div>
+    <br />
+    <div class="form-group">
+        <button type="submit" class="btn">Sign in</button>
     </div>
 </form>

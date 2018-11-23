@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Contacts.Models;
@@ -29,6 +27,11 @@ namespace Contacts.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Авторизация пользователя
+        /// </summary>
+        /// <param name="model">Данные для входа</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel model)
@@ -38,7 +41,7 @@ namespace Contacts.Controllers
                 var user = await _userService.FindUser(model.Email, model.Password);
                 if (user != null)
                 {
-                    await Authenticate(user); // Аутентификация
+                    await Authenticate(user);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -46,11 +49,18 @@ namespace Contacts.Controllers
             }
             return View(model);
         }
+
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
+
+        /// <summary>
+        /// Регистрация пользователя
+        /// </summary>
+        /// <param name="model">Данные для регистрации</param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterModel model)
@@ -63,7 +73,7 @@ namespace Contacts.Controllers
                     var newUser = new User {Email = model.Email, Password = model.Password};
                     await _userService.InsertUser(newUser);   
 
-                    await Authenticate(newUser); // аутентификация
+                    await Authenticate(newUser);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -72,8 +82,14 @@ namespace Contacts.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Аутентификация
+        /// </summary>
+        /// <param name="user">Пользователь</param>
+        /// <returns></returns>
         private async Task Authenticate(User user)
         {
+            //TODO Сделать через Identity
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
@@ -85,6 +101,10 @@ namespace Contacts.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
 
+        /// <summary>
+        /// Выход из системы
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
