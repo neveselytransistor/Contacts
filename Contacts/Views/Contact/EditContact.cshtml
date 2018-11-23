@@ -1,0 +1,28 @@
+﻿@model Contact
+@{
+    ViewBag.Title = "Contact";
+}
+
+<div class="container">
+    <h3> Edit Contact</h3>
+    <hr />
+    <br />
+    <form method="post" asp-action="UpdateContact">
+        <input hidden asp-for="@Model.Id"/>
+        <div class="row">
+            <div class="col-md-4">
+                <label asp-for="@Model.Name"></label>
+                <input asp-for="@Model.Name" class="form-control"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label asp-for="@Model.Phone"></label>
+                <input asp-for="@Model.Phone" class="form-control"/>
+            </div>
+        </div>
+        <br/>
+        <input type="submit" value="Save" class="btn btn-primary"/>
+        <a class="btn btn-default" asp-action="ContactList">Cancel</a>
+    </form>
+</div> 
