@@ -1,4 +1,5 @@
-﻿using Contacts.Services;
+﻿using Contacts.Middleware;
+using Contacts.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -49,6 +50,8 @@ namespace Contacts
                          .CreateLogger();
 
             services.AddSingleton(Log.Logger);
+
+            Log.Information("Starting up");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,6 +64,7 @@ namespace Contacts
                     context.Database.Migrate();
                 }
             }
+            loggerFactory.AddSerilog();
 
             if (env.IsDevelopment())
             {
@@ -70,7 +74,9 @@ namespace Contacts
             {
                 app.UseExceptionHandler("/Home/Error");
             }
- 
+
+            app.UseMiddleware<SerilogMiddleware>();
+
             app.UseStaticFiles();
  
             app.UseAuthentication();

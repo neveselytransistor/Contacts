@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Authorization;
+﻿
 using Microsoft.AspNetCore.Mvc;
 
 namespace Contacts.Controllers
@@ -9,6 +8,11 @@ namespace Contacts.Controllers
         public IActionResult Index()
         {
             return RedirectToAction("ContactList", "Contact");
+        }
+
+        public IActionResult Error()
+        {
+            return View();
         }
     }
 }
