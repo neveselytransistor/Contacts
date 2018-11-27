@@ -1,5 +1,6 @@
 ﻿using System;
 using Contacts.Middleware;
+using Contacts.Repositories;
 using Contacts.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -56,6 +57,7 @@ namespace Contacts
 
             services.AddScoped<IContactService, ContactService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IContactRepository, ContactRepository>();
 
             Log.Logger = new LoggerConfiguration()
                          .ReadFrom.Configuration(Configuration)

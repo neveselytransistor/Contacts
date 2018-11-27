@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contacts.Models;
+using Contacts.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -10,17 +11,16 @@ namespace Contacts.Services
 {
     public class ContactService : IContactService
     {
-        private readonly ApplicationContext _context;
+        private readonly IContactRepository _contactRepository;
 
-        public ContactService(ApplicationContext context)
+        public ContactService(IContactRepository contactRepository)
         {
-            _context = context;
+            _contactRepository = contactRepository;
         }
 
         public async Task AddContact(Contact contact)
         {
-            await _context.Contacts.AddAsync(contact);
-            await _context.SaveChangesAsync();
+            await _contactRepository.AddAsync(contact);
         }
 
         public async Task UpdateContact(Contact newContact)
@@ -31,27 +31,22 @@ namespace Contacts.Services
                 Name = newContact.Name,
                 Phone = newContact.Phone
             };
-            _context.Attach(contact);
-            _context.Entry(contact).Property(u => u.Name).IsModified = true;
-            _context.Entry(contact).Property(u => u.Phone).IsModified = true;
-            await _context.SaveChangesAsync();
+            await _contactRepository.UpdateAsync(contact);
         }
 
         public async Task<List<Contact>> GetContacts(int userId)
         {
-            return await _context.Contacts.Where(x => x.UserId == userId).ToListAsync();
+            return await _contactRepository.GetAsync(userId);
         }
 
         public async Task DeleteContact(int id)
         {
-            var contact = await _context.Contacts.FindAsync(id);
-            _context.Contacts.Remove(contact);
-            await _context.SaveChangesAsync();
+            await _contactRepository.DeleteAsync(id);
         }
 
         public async Task<Contact> FindContact(int id)
         {
-            return await _context.Contacts.FirstOrDefaultAsync(x => x.Id == id);
+            return await _contactRepository.FindAsync(id);
         }
     }
 }
