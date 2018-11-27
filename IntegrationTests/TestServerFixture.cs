@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using System;
-using System.IO;
+
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Contacts;
-using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace IntegrationTests
@@ -17,26 +16,38 @@ namespace IntegrationTests
 
         public TestServerFixture()
         {
-            var cb = new ConfigurationBuilder()
-                     .AddJsonFile("appsettings.json", false, false)
-                     .AddJsonFile("appsettings.Test.json", false, false)
-                     .Build();
             var builder = new WebHostBuilder()
                           .UseStartup<Startup>()
-                          .UseConfiguration(cb)
-                          .UseEnvironment("Test");
+                          .UseSetting("ConnectionStrings:DefaultConnection", "Data Source = testdata.db");
 
             _server = new TestServer(builder);
             _client = _server.CreateClient();
         }
 
         [Fact]
-        public async Task ReturnResult()
+        public async Task GetContactsTest()
         {
-            //var response = await _client.GetAsync("/");
-            //response.EnsureSuccessStatusCode();
-            //var responseString = await response.Content.ReadAsStringAsync();
-            //Assert.Equal("", responseString);
+            var response = await _client.GetAsync("/Contact/ContactList");
+
+            var path = response.Headers.Location.LocalPath;
+            var query = response.Headers.Location.Query;
+            Assert.Equal("/Auth/Login", path);
+            Assert.Equal("?ReturnUrl=%2FContact%2FContactList", query);
+        }
+
+        [Fact(Skip = "Переделать")]
+        public async Task LoginTest()
+        {
+            var email = "Tom@mail.ru";
+            var password = "1234";
+
+            var content = new StringContent($"email={email}&password={password}",
+                                            Encoding.UTF8,
+                                            "application/x-www-form-urlencoded");
+            var response = await _client.PostAsync("/Auth/Login", content);
+        
+
+            Assert.Equal("?ReturnUrl=%2FContact%2FContactList", response.Headers.Location.Query);
         }
     }
 }

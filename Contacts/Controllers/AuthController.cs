@@ -21,6 +21,7 @@ namespace Contacts.Controllers
             _userService = userService;
         }
 
+        [Route("/Auth/Login")]
         [HttpGet]
         public IActionResult Login()
         {
@@ -32,9 +33,10 @@ namespace Contacts.Controllers
         /// </summary>
         /// <param name="model">Данные для входа</param>
         /// <returns></returns>
+        [Route("/Auth/Login")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginModel model)
+        public async Task<IActionResult> Login([FromForm] LoginModel model)
         {
             if (ModelState.IsValid)
             {
@@ -61,6 +63,7 @@ namespace Contacts.Controllers
         /// </summary>
         /// <param name="model">Данные для регистрации</param>
         /// <returns></returns>
+        [Route("/Auth/Register")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterModel model)

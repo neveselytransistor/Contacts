@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Contacts.Models;
 using Contacts.Services;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 
 namespace Contacts.Controllers
 {
@@ -22,6 +20,7 @@ namespace Contacts.Controllers
         /// Возвращает список контактов для текущего пользователя
         /// </summary>
         /// <returns></returns>
+        [Route("/Contact/ContactList")]
         [HttpGet]
         public async Task<ViewResult> ContactList()
         {
@@ -35,6 +34,7 @@ namespace Contacts.Controllers
         /// </summary>
         /// <param name="contact">Контакт с формы</param>
         /// <returns></returns>
+        [Route("/Contact/UpdateContact")]
         [HttpPost]
         public async Task<IActionResult> UpdateContact([FromForm] Contact contact)
         {
@@ -48,6 +48,7 @@ namespace Contacts.Controllers
         /// </summary>
         /// <param name="id">Идентификатор контакта</param>
         /// <returns></returns>
+        [Route("/Contact/UpdateContact/{id}")]
         [HttpGet]
         public async Task<ViewResult> EditContact(int id)
         {
@@ -60,6 +61,7 @@ namespace Contacts.Controllers
         /// </summary>
         /// <param name="contact">Данные нового контакта</param>
         /// <returns></returns>
+        [Route("/Contact/AddContact")]
         [HttpPost]
         public async Task<IActionResult> AddContact([FromForm] Contact contact)
         {
@@ -84,6 +86,7 @@ namespace Contacts.Controllers
         /// </summary>
         /// <param name="id">Идентификатор контакта</param>
         /// <returns></returns>
+        [Route("/Contact/Delete/{id}")]
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {

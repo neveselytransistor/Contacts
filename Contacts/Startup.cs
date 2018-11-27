@@ -1,4 +1,5 @@
-﻿using Contacts.Middleware;
+﻿using System;
+using Contacts.Middleware;
 using Contacts.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using ILogger = Serilog.ILogger;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Contacts
 {
@@ -40,6 +41,17 @@ namespace Contacts
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
+            });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "Contacts API",
+                    Description = "ASP.NET Core Web API"
+                });
+                c.IncludeXmlComments(GetXmlCommentsPath());
             });
 
             services.AddScoped<IContactService, ContactService>();
@@ -87,6 +99,17 @@ namespace Contacts
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Contacts API");
+            });
+        }
+
+        private static string GetXmlCommentsPath()
+        {
+            return string.Format(@"{0}\Contacts.xml", AppDomain.CurrentDomain.BaseDirectory);
         }
     }
 }
