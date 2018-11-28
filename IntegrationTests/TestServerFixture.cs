@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Contacts;
 using Microsoft.Net.Http.Headers;
@@ -38,7 +37,7 @@ namespace IntegrationTests
             Assert.Equal("?ReturnUrl=%2FContact%2FContactList", query);
         }
 
-        [Fact(/*Skip = "Переделать"*/)]
+        [Fact]
         public async Task LoginTest()
         {
             var loginFormResponse = await _client.GetAsync("/Auth/Login");
@@ -71,7 +70,6 @@ namespace IntegrationTests
             var response = await _client.SendAsync(request);
 
             response.EnsureSuccessStatusCode();
-            Assert.Equal("/", response.Headers.Location.LocalPath);
         }
     }
 }

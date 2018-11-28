@@ -3,6 +3,9 @@ using Contacts.Models;
 
 namespace Contacts.Services
 {
+    /// <summary>
+    /// Предоставляет методы для работы с пользователем
+    /// </summary>
     public interface IUserService
     {
         /// <summary>
